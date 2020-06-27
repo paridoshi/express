@@ -1,12 +1,15 @@
-const express = require('express'),
-     http = require('http');
-
-
+const express = require('express');
+const http = require('http');
+const morgan = require('morgan');
 const hostname = 'localhost';
 const port = 3000;
-
 const app = express();
+const bodyParser = require('body-parser');
+app.use(morgan('dev'));
 
+
+app.use(express.static(__dirname+'/public'));
+/*
 app.use((req, res, next) => {
   console.log(req.headers);
   res.statusCode = 200;
@@ -14,9 +17,12 @@ app.use((req, res, next) => {
   res.end('<html><body><h1>This is an Express Server</h1></body></html>');
 
 });
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
+*/
 
+//app.use(bodyParser.json());
+
+
+/*
 app.all('/dishes', (req,res,next) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
@@ -56,11 +62,27 @@ app.put('/dishes/:dishId', (req, res, next) => {
 });
 
 app.delete('/dishes/:dishId', (req, res, next) => {
-    res.end('Deleting dish: ' + req.params.dishId);});
+    res.end('Deleting dish: ' + req.params.dishId);
+});
+*/
 
+
+const dishRouter = require('./routes/dishRouter');
+app.use('/dishes', dishRouter);
+
+const promotionsRouter = require('./routes/promotionsRouter');
+app.use('/promotions', promotionsRouter);
+
+const leadersRouter = require('./routes/leadersRouter');
+app.use('/leaders', leadersRouter);
 
 const server = http.createServer(app);
-
 server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+    console.log(`Server running at http://${hostname}:${port}/`);
 });
+
+
+
+
+
+
